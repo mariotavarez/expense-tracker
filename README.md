@@ -55,6 +55,11 @@ Open [http://localhost:5173](http://localhost:5173)
 
 The app seeds itself with 3 months of realistic sample data on first load. Data persists in `localStorage`.
 
+**Production build:**
+```bash
+npm run build && npm run preview
+```
+
 ---
 
 ## Tech Stack
@@ -99,20 +104,68 @@ src/
 
 ---
 
-## Design
+## How It Works
+
+```
+Add transaction modal
+  → description + amount + category + date + type (expense/income)
+  → saved to localStorage via useExpenses hook
+
+Dashboard reads filtered data:
+  → totals this month vs last month (% change)
+  → category breakdown → Recharts PieChart
+  → 6-month history → Recharts BarChart
+
+Budget page:
+  → set per-category monthly limit
+  → progress bar = (spent / limit) × 100
+  → warning badge when > 80%, error when > 100%
+```
+
+---
+
+## Categories
+
+| Category | Emoji | Color |
+|---|---|---|
+| Food & Dining | 🍕 | Orange |
+| Transport | 🚗 | Blue |
+| Entertainment | 🎮 | Purple |
+| Shopping | 🛍 | Pink |
+| Housing | 🏠 | Teal |
+| Health | 💊 | Green |
+| Other | 📦 | Gray |
+
+---
+
+## Persistence
+
+All data is stored in `localStorage`:
+
+| Key | Contents |
+|---|---|
+| `spendr-expenses` | All transactions (expense + income) |
+| `spendr-budgets` | Per-category monthly budget limits |
+
+On first load, the app seeds `spendr-expenses` with ~40 realistic transactions across 3 months. To reset: `localStorage.clear()` in DevTools.
+
+---
+
+## Design System
 
 Design system: Vercel-inspired. See [DESIGN.md](./DESIGN.md)
 
-Key principles implemented:
+Key principles from Vercel's design language:
 
-- **Shadow-as-border**: `box-shadow: 0px 0px 0px 1px rgba(0,0,0,0.08)` on every card
-- **Extreme negative letter-spacing**: `-1.6px` on 32px headings, `-1.2px` on display text
-- **Vercel Black** (`#171717`) for all headings — not pure `#000000`
-- Ship Red (`#ff5b4f`) for expenses, Develop Blue (`#0a72ef`) for income
-- Sticky frosted-glass header with `backdrop-filter: blur(12px)`
+- **Shadow-as-border**: Every card uses `box-shadow: 0px 0px 0px 1px rgba(0,0,0,0.08)` instead of CSS `border` — Vercel's signature technique
+- **Extreme negative letter-spacing**: `-1.6px` on 32px headings, `-1.2px` on display text — makes type feel engineered, not typeset
+- **Vercel Black** (`#171717`) for all headings — not pure `#000000`, the slight warmth prevents harshness
+- **Ship Red** (`#ff5b4f`) for expenses, **Develop Blue** (`#0a72ef`) for income — Vercel's workflow accent colors repurposed
+- **Geist/Inter** — geometric, no-decoration typography
+- Sticky frosted-glass header with `backdrop-filter: blur(12px)` on scroll
 
 ---
 
 ## License
 
-MIT © 2025
+MIT © [Mario Tavarez](https://github.com/mariotavarez)
